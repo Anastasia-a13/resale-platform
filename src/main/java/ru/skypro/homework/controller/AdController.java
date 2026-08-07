@@ -73,7 +73,7 @@ public class AdController {
             @ApiResponse(responseCode = "401", description = "Неавторизованный доступ")
     })
     public ResponseEntity<ExtendedAdDto> getAd(
-            @PathVariable Long id,
+            @PathVariable Integer id,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
         return ResponseEntity.ok(adService.getAdById(userDetails, id));
@@ -91,7 +91,7 @@ public class AdController {
             @ApiResponse(responseCode = "401", description = "Неавторизованный доступ")
     })
     public ResponseEntity<?> removeAd(
-            @PathVariable Long id,
+            @PathVariable Integer id,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
         adService.deleteAd(userDetails, id);
@@ -109,7 +109,7 @@ public class AdController {
             @ApiResponse(responseCode = "401", description = "Неавторизованный доступ")
     })
     public ResponseEntity<AdDto> updateAds(
-            @PathVariable Long id,
+            @PathVariable Integer id,
             @RequestBody @Valid CreateOrUpdateAdDto dto,
             @AuthenticationPrincipal UserDetails userDetails
     ) {

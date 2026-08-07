@@ -35,7 +35,7 @@ public class CommentController {
             @ApiResponse(responseCode = "401", description = "Неавторизованный доступ")
     })
     public ResponseEntity<CommentsDto> getComments(
-            @PathVariable Long adId,
+            @PathVariable Integer adId,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
         return ResponseEntity.ok(commentService.getCommentsByAdId(adId, userDetails));
@@ -52,7 +52,7 @@ public class CommentController {
             @ApiResponse(responseCode = "401", description = "Неавторизованный доступ")
     })
     public ResponseEntity<CommentDto> addComment(
-            @PathVariable Long adId,
+            @PathVariable Integer adId,
             @RequestBody @Valid CreateOrUpdateCommentDto dto,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
@@ -72,8 +72,8 @@ public class CommentController {
             @ApiResponse(responseCode = "401", description = "Неавторизованный доступ")
     })
     public ResponseEntity<?> deleteComment(
-            @PathVariable Long adId,
-            @PathVariable Long commentId,
+            @PathVariable Integer adId,
+            @PathVariable Integer commentId,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
         commentService.deleteComment(adId, commentId, userDetails);
@@ -92,8 +92,8 @@ public class CommentController {
             @ApiResponse(responseCode = "401", description = "Неавторизованный доступ")
     })
     public ResponseEntity<CommentDto> updateComment(
-            @PathVariable Long adId,
-            @PathVariable Long commentId,
+            @PathVariable Integer adId,
+            @PathVariable Integer commentId,
             @RequestBody @Valid CreateOrUpdateCommentDto dto,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
