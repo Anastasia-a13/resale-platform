@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.comment.CommentDto;
 import ru.skypro.homework.dto.comment.CommentsDto;
 import ru.skypro.homework.dto.comment.CreateOrUpdateCommentDto;
+import ru.skypro.homework.service.CommentService;
 
 /**
  * Контроллер комментариев.

@@ -16,6 +16,7 @@ import ru.skypro.homework.dto.ad.AdDto;
 import ru.skypro.homework.dto.ad.AdsDto;
 import ru.skypro.homework.dto.ad.CreateOrUpdateAdDto;
 import ru.skypro.homework.dto.ad.ExtendedAdDto;
+import ru.skypro.homework.service.AdService;
 
 /**
  * Контроллер для управления объявлениями.
@@ -142,7 +143,7 @@ public class AdController {
             @ApiResponse(responseCode = "401", description = "Неавторизованный доступ")
     })
     public ResponseEntity<byte[]> updateImage(
-            @PathVariable Long id,
+            @PathVariable Integer id,
             @RequestPart("image") MultipartFile image,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
