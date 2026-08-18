@@ -36,10 +36,9 @@ public class CommentController {
             @ApiResponse(responseCode = "401", description = "Неавторизованный доступ")
     })
     public ResponseEntity<CommentsDto> getComments(
-            @PathVariable Integer adId,
-            @AuthenticationPrincipal UserDetails userDetails
+            @PathVariable Integer adId
     ) {
-        return ResponseEntity.ok(commentService.getCommentsByAdId(adId, userDetails));
+        return ResponseEntity.ok(commentService.getCommentsByAdId(adId));
     }
 
     /**
@@ -72,13 +71,13 @@ public class CommentController {
             @ApiResponse(responseCode = "404", description = "Комментарий или объявление не найдены"),
             @ApiResponse(responseCode = "401", description = "Неавторизованный доступ")
     })
-    public ResponseEntity<?> deleteComment(
+    public ResponseEntity<Void> deleteComment(
             @PathVariable Integer adId,
             @PathVariable Integer commentId,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
         commentService.deleteComment(adId, commentId, userDetails);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     /**

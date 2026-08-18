@@ -63,7 +63,6 @@ public class AdController {
      * Получает детальные данные конкретного объявления.
      *
      * @param id          идентификатор объявления
-     * @param userDetails данные авторизованного пользователя
      * @return ResponseEntity с объектом ExtendedAdDto
      */
     @GetMapping("/{id}")
@@ -74,10 +73,9 @@ public class AdController {
             @ApiResponse(responseCode = "401", description = "Неавторизованный доступ")
     })
     public ResponseEntity<ExtendedAdDto> getAd(
-            @PathVariable Integer id,
-            @AuthenticationPrincipal UserDetails userDetails
+            @PathVariable Integer id
     ) {
-        return ResponseEntity.ok(adService.getAdById(userDetails, id));
+        return ResponseEntity.ok(adService.getAdById(id));
     }
 
     /**
@@ -91,7 +89,7 @@ public class AdController {
             @ApiResponse(responseCode = "404", description = "Объявление не найдено"),
             @ApiResponse(responseCode = "401", description = "Неавторизованный доступ")
     })
-    public ResponseEntity<?> removeAd(
+    public ResponseEntity<Void> removeAd(
             @PathVariable Integer id,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
@@ -148,8 +146,11 @@ public class AdController {
             @AuthenticationPrincipal UserDetails userDetails
     ) {
         byte[] imageBytes = adService.updateImage(userDetails, id, image);
+        MediaType mediaType = image.getContentType() != null
+                ? MediaType.parseMediaType(image.getContentType())
+                : MediaType.APPLICATION_OCTET_STREAM;
         return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .contentType(mediaType)
                 .body(imageBytes);
     }
 }

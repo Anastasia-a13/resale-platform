@@ -24,7 +24,6 @@ import ru.skypro.homework.service.UserService;
  * Реализует получение, обновление данных, смену пароля и загрузку аватара.
  */
 @Slf4j
-@CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
@@ -86,7 +85,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Файл не предоставлен или имеет неверный формат"),
             @ApiResponse(responseCode = "401", description = "Пользователь не авторизован")
     })
-    public ResponseEntity<?> updateUserImage(
+    public ResponseEntity<Void> updateUserImage(
             @RequestPart("image") MultipartFile image,
             @Parameter(hidden = true) @AuthenticationPrincipal UserDetails userDetails
     ) {
@@ -114,7 +113,7 @@ public class UserController {
             @ApiResponse(responseCode = "401", description = "Неверный текущий пароль или пользователь не авторизован"),
             @ApiResponse(responseCode = "403", description = "Запрещено изменение пароля")
     })
-    public ResponseEntity<?> setPassword(
+    public ResponseEntity<Void> setPassword(
             @Valid @RequestBody NewPasswordDto newPasswordDto,
             @Parameter(hidden = true) @AuthenticationPrincipal UserDetails userDetails
     ) {

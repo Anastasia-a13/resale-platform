@@ -35,6 +35,9 @@ public class Ad {
     @Column(name = "price", nullable = false)
     private Integer price;
 
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
+
     @Column(name = "image")
     private String image;
 

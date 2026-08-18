@@ -43,6 +43,7 @@ public record Register(
 
         @Schema(description = "Роль", example = "USER")
         @NotBlank(message = "Роль обязательна")
+        @Pattern(regexp = "USER|ADMIN", message = "Роль может быть только USER или ADMIN")
         String role
 ) {
 }
