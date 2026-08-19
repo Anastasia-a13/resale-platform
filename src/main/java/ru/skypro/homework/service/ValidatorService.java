@@ -1,5 +1,6 @@
 package ru.skypro.homework.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,12 @@ import ru.skypro.homework.exception.ResourceNotFoundException;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.Comment;
 
+/**
+ * Сервис проверки прав доступа.
+ * Предоставляет методы проверки владельца объявления и комментария,
+ * а также принадлежности комментария к указанному объявлению.
+ */
+@Slf4j
 @Service
 public class ValidatorService {
 

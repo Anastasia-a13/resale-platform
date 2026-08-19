@@ -6,21 +6,33 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.ad.AdDto;
 import ru.skypro.homework.dto.ad.AdsDto;
 import ru.skypro.homework.dto.ad.CreateOrUpdateAdDto;
 import ru.skypro.homework.dto.ad.ExtendedAdDto;
 import ru.skypro.homework.service.AdService;
+import ru.skypro.homework.service.ImageService;
 
 /**
  * Контроллер для управления объявлениями.
  */
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/ads")
@@ -28,6 +40,7 @@ import ru.skypro.homework.service.AdService;
 public class AdController {
 
     private final AdService adService;
+    private final ImageService imageService;
 
     /**
      * Получает список объявлений.
@@ -56,7 +69,7 @@ public class AdController {
             @AuthenticationPrincipal UserDetails userDetails
     ) {
         AdDto createdAd = adService.createAd(userDetails, properties, image);
-        return ResponseEntity.status(201).body(createdAd);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdAd);
     }
 
     /**
@@ -89,7 +102,7 @@ public class AdController {
             @ApiResponse(responseCode = "404", description = "Объявление не найдено"),
             @ApiResponse(responseCode = "401", description = "Неавторизованный доступ")
     })
-    public ResponseEntity<Void> removeAd(
+    public ResponseEntity<Void> deleteAd(
             @PathVariable Integer id,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
@@ -107,7 +120,7 @@ public class AdController {
             @ApiResponse(responseCode = "404", description = "Объявление не найдено"),
             @ApiResponse(responseCode = "401", description = "Неавторизованный доступ")
     })
-    public ResponseEntity<AdDto> updateAds(
+    public ResponseEntity<AdDto> updateAd(
             @PathVariable Integer id,
             @RequestBody @Valid CreateOrUpdateAdDto dto,
             @AuthenticationPrincipal UserDetails userDetails
@@ -152,5 +165,19 @@ public class AdController {
         return ResponseEntity.ok()
                 .contentType(mediaType)
                 .body(imageBytes);
+    }
+
+    @GetMapping(value = "/image/{fileName}",
+            produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE})
+    @Operation(summary = "Получить картинку объявления")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Картинка успешно получена"),
+            @ApiResponse(responseCode = "404", description = "Картинка не найдена")
+    })
+    public ResponseEntity<byte[]> getImage(@PathVariable String fileName) {
+        byte[] image = imageService.getImage(fileName);
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(image);
     }
 }

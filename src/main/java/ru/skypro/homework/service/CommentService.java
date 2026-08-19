@@ -1,6 +1,7 @@
 package ru.skypro.homework.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,11 @@ import ru.skypro.homework.repository.UserRepository;
 
 import java.util.List;
 
+/**
+ * Сервис для управления комментариями к объявлениям.
+ * Предоставляет операции создания, чтения, обновления и удаления комментариев.
+ */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CommentService {

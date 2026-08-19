@@ -1,5 +1,7 @@
 package ru.skypro.homework.service.impl;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,22 +11,23 @@ import ru.skypro.homework.model.user.User;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AuthService;
 
+/**
+ * Реализация сервиса аутентификации и регистрации пользователей.
+ * Предоставляет методы для входа в систему и создания нового аккаунта.
+ */
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder encoder;
-
-    public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.encoder = passwordEncoder;
-    }
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional(readOnly = true)
-    public boolean login(String userName, String password) {
-        return userRepository.findByEmail(userName)
-                .map(user -> encoder.matches(password, user.getPassword()))
+    public boolean login(String username, String password) {
+        return userRepository.findByEmail(username)
+                .map(user -> passwordEncoder.matches(password, user.getPassword()))
                 .orElse(false);
     }
 
@@ -36,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
         }
         User user = User.builder()
                 .email(register.username())
-                .password(encoder.encode(register.password()))
+                .password(passwordEncoder.encode(register.password()))
                 .firstName(register.firstName())
                 .lastName(register.lastName())
                 .phone(register.phone())

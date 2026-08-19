@@ -1,7 +1,7 @@
 databaseChangeLog:
   - include:
-      file: db/changelog/v1/001-create-users-table.sql
+      file: liquibase/scripts/001-create-users-table.sql
   - include:
-      file: db/changelog/v1/002-create-ads-table.sql
+      file: liquibase/scripts/002-create-ads-table.sql
   - include:
-      file: db/changelog/v1/003-create-comments-table.sql
+      file: liquibase/scripts/003-create-comments-table.sql

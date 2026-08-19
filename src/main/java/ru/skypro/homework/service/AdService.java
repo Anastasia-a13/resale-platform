@@ -1,6 +1,7 @@
 package ru.skypro.homework.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,12 @@ import ru.skypro.homework.repository.UserRepository;
 
 import java.util.List;
 
+/**
+ * Сервис для управления объявлениями.
+ * Предоставляет операции создания, чтения, обновления и удаления объявлений,
+ * а также управления изображениями объявлений.
+ */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AdService {
@@ -82,9 +89,9 @@ public class AdService {
         Ad ad = adRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundException.AD_NOT_FOUND));
         validator.checkAdOwnership(ad, userDetails);
-        byte[] imageBytes = imageService.getImageBytes(image);
-        ad.setImage(imageService.saveImage(image));
+        ImageService.ImageResult result = imageService.updateImage(ad.getImage(), image);
+        ad.setImage(result.fileName());
         adRepository.save(ad);
-        return imageBytes;
+        return result.bytes();
     }
 }

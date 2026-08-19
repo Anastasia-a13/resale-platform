@@ -1,6 +1,7 @@
 package ru.skypro.homework.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,12 @@ import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.model.user.User;
 import ru.skypro.homework.repository.UserRepository;
 
+/**
+ * Сервис для управления профилем пользователя.
+ * Предоставляет операции получения, обновления данных,
+ * загрузки аватара и смены пароля.
+ */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -42,7 +49,10 @@ public class UserService {
     public void uploadAvatar(UserDetails userDetails, MultipartFile image) {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundException.USER_NOT_FOUND));
-        user.setImage(imageService.saveImage(image));
+        String fileName = user.getImage() != null
+                ? imageService.updateAvatar(user.getImage(), image).fileName()
+                : imageService.saveAvatar(image);
+        user.setImage(fileName);
         userRepository.save(user);
     }
 
