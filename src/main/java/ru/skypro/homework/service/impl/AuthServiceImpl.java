@@ -25,8 +25,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional(readOnly = true)
-    public boolean login(String username, String password) {
-        return userRepository.findByEmail(username)
+    public boolean login(String userName, String password) {
+        return userRepository.findByEmail(userName)
                 .map(user -> passwordEncoder.matches(password, user.getPassword()))
                 .orElse(false);
     }
