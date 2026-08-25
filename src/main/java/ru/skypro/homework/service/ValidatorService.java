@@ -23,6 +23,7 @@ public class ValidatorService {
             return;
         }
         if (!ad.getAuthor().getEmail().equals(userDetails.getUsername())) {
+            log.warn("Доступ запрещён: adId={}, пользователь={}", ad.getId(), userDetails.getUsername());
             throw new ForbiddenException(ForbiddenException.MESSAGE);
         }
     }
@@ -38,6 +39,7 @@ public class ValidatorService {
             return;
         }
         if (!comment.getAuthor().getEmail().equals(userDetails.getUsername())) {
+            log.warn("Доступ запрещён: commentId={}, пользователь={}", comment.getId(), userDetails.getUsername());
             throw new ForbiddenException(ForbiddenException.MESSAGE);
         }
     }

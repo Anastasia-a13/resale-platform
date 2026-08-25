@@ -74,9 +74,11 @@ public class ImageService {
     private void validateImage(MultipartFile file) {
         String contentType = file.getContentType();
         if (contentType == null || !ALLOWED_TYPES.contains(contentType)) {
+            log.warn("Отклонён файл с типом: {}", contentType);
             throw new ValidationException("Поддерживаются только JPEG, PNG, GIF");
         }
         if (file.isEmpty()) {
+            log.warn("Отклонён пустой файл");
             throw new ValidationException("Файл пустой");
         }
     }

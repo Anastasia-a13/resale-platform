@@ -54,6 +54,7 @@ public class UserService {
                 : imageService.saveAvatar(image);
         user.setImage(fileName);
         userRepository.save(user);
+        log.info("Загружен аватар для пользователя={}, размер={} байт", user.getEmail(), image.getSize());
     }
 
     @Transactional
@@ -61,9 +62,11 @@ public class UserService {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundException.USER_NOT_FOUND));
         if (!passwordEncoder.matches(newPasswordDto.currentPassword(), user.getPassword())) {
+            log.warn("Неверный текущий пароль: {}", user.getEmail());
             throw new BadRequestException(BadRequestException.WRONG_PASSWORD);
         }
         user.setPassword(passwordEncoder.encode(newPasswordDto.newPassword()));
         userRepository.save(user);
+        log.info("Пароль успешно изменён: {}", user.getEmail());
     }
 }

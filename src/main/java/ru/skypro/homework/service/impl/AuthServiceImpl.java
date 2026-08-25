@@ -26,9 +26,15 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional(readOnly = true)
     public boolean login(String userName, String password) {
-        return userRepository.findByEmail(userName)
+        boolean result = userRepository.findByEmail(userName)
                 .map(user -> passwordEncoder.matches(password, user.getPassword()))
                 .orElse(false);
+        if (result) {
+            log.info("Успешный вход: {}", userName);
+        } else {
+            log.warn("Неудачная попытка входа: {}", userName);
+        }
+        return result;
     }
 
     @Override
@@ -46,6 +52,7 @@ public class AuthServiceImpl implements AuthService {
                 .role(Role.valueOf(register.role()))
                 .build();
         userRepository.save(user);
+        log.info("Зарегистрирован новый пользователь: {}", register.username());
         return true;
     }
 }

@@ -49,7 +49,9 @@ public class AdService {
         Ad ad = adMapper.toEntity(properties);
         ad.setAuthor(user);
         ad.setImage(imageService.saveImage(image));
-        return adMapper.toDto(adRepository.save(ad));
+        Ad saved = adRepository.save(ad);
+        log.info("Создано объявление id={}, title={}, author={}", saved.getId(), saved.getTitle(), user.getEmail());
+        return adMapper.toDto(saved);
     }
 
     @Transactional(readOnly = true)
@@ -65,6 +67,7 @@ public class AdService {
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundException.AD_NOT_FOUND));
         validator.checkAdOwnership(ad, userDetails);
         adRepository.deleteById(id);
+        log.info("Удалено объявление id={}, пользователь={}", id, userDetails.getUsername());
     }
 
     @Transactional
@@ -73,7 +76,9 @@ public class AdService {
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundException.AD_NOT_FOUND));
         validator.checkAdOwnership(ad, userDetails);
         adMapper.updateAd(dto, ad);
-        return adMapper.toDto(adRepository.save(ad));
+        Ad updated = adRepository.save(ad);
+        log.info("Обновлено объявление id={}, пользователь={}", id, userDetails.getUsername());
+        return adMapper.toDto(updated);
     }
 
     @Transactional(readOnly = true)

@@ -53,7 +53,9 @@ public class CommentService {
         Comment comment = commentMapper.toEntity(dto);
         comment.setAd(ad);
         comment.setAuthor(user);
-        return commentMapper.toDto(commentRepository.save(comment));
+        Comment saved = commentRepository.save(comment);
+        log.info("Создан комментарий id={}, adId={}, author={}", saved.getId(), adId, user.getEmail());
+        return commentMapper.toDto(saved);
     }
 
     @Transactional
@@ -63,6 +65,7 @@ public class CommentService {
         validator.checkCommentAdMatch(comment, adId);
         validator.checkCommentOwnership(comment, userDetails);
         commentRepository.deleteById(commentId);
+        log.info("Удален комментарий id={}, adId={}, пользователь={}", commentId, adId, userDetails.getUsername());
     }
 
     @Transactional

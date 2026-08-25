@@ -37,7 +37,7 @@ public class Comment {
     @JoinColumn(name = "ad_id")
     private Ad ad;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "author_id", nullable = false)
     private User author;
 }
