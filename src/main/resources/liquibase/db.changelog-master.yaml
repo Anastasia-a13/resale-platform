@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: liquibase/scripts/001-create-users-table.sql
+  - include:
+      file: liquibase/scripts/002-create-ads-table.sql
+  - include:
+      file: liquibase/scripts/003-create-comments-table.sql
