@@ -21,6 +21,10 @@ import ru.skypro.homework.service.AdService;
 import ru.skypro.homework.service.ImageService;
 import ru.skypro.homework.service.UserService;
 
+/**
+ * Контроллер для работы с изображениями.
+ * Реализует получение и обновление картинок объявлений и аватаров пользователей.
+ */
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -31,6 +35,12 @@ public class ImageController {
     private final AdService adService;
     private final UserService userService;
 
+    /**
+     * Получает картинку объявления по имени файла.
+     *
+     * @param fileName имя файла изображения
+     * @return ResponseEntity с байтами изображения
+     */
     @GetMapping(value = "/ads/image/{fileName}",
             produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE})
     @Operation(summary = "Получить картинку объявления")
@@ -45,6 +55,15 @@ public class ImageController {
                 .body(image);
     }
 
+    /**
+     * Обновляет картинку объявления.
+     * Возвращает байты обновленного изображения.
+     *
+     * @param id          идентификатор объявления
+     * @param image       файл изображения (multipart/form-data)
+     * @param userDetails данные авторизованного пользователя
+     * @return ResponseEntity с байтами обновленного изображения
+     */
     @PatchMapping(value = "/ads/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Обновление картинки объявления")
     @ApiResponses({
@@ -67,6 +86,12 @@ public class ImageController {
                 .body(imageBytes);
     }
 
+    /**
+     * Получает аватар пользователя по имени файла.
+     *
+     * @param fileName имя файла аватара
+     * @return ResponseEntity с байтами изображения
+     */
     @GetMapping(value = "/users/image/{fileName}",
             produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE})
     @Operation(summary = "Получить аватар пользователя")
@@ -81,6 +106,13 @@ public class ImageController {
                 .body(image);
     }
 
+    /**
+     * Загружает новый аватар для текущего пользователя.
+     *
+     * @param image       файл изображения (multipart/form-data)
+     * @param userDetails данные авторизованного пользователя
+     * @return ResponseEntity со статусом 200 при успехе
+     */
     @PatchMapping(value = "/users/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Загрузить аватар пользователя")
     @ApiResponses({
