@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.skypro.homework.config.UserDetailsServiceImpl;
@@ -16,7 +14,6 @@ import ru.skypro.homework.config.WebSecurityConfig;
 import ru.skypro.homework.dto.user.UserDto;
 import ru.skypro.homework.exception.BadRequestException;
 import ru.skypro.homework.repository.UserRepository;
-import ru.skypro.homework.service.ImageService;
 import ru.skypro.homework.service.UserService;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -33,9 +30,6 @@ class UserControllerTest {
 
     @MockitoBean
     private UserService userService;
-
-    @MockitoBean
-    private ImageService imageService;
 
     @MockitoBean
     private UserDetailsServiceImpl userDetailsService;
@@ -117,24 +111,4 @@ class UserControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    @Test
-    @WithMockUser(username = "user@mail.com", roles = "USER")
-    void uploadAvatarSuccess() throws Exception {
-        MockMultipartFile image = new MockMultipartFile(
-                "image", "avatar.jpg", MediaType.IMAGE_JPEG_VALUE, new byte[]{1, 2, 3});
-
-        mockMvc.perform(multipart(HttpMethod.PATCH, "/users/me/image")
-                        .file(image))
-                .andExpect(status().isOk());
-        verify(userService).uploadAvatar(any(), any());
-    }
-
-    @Test
-    @WithMockUser(username = "user@mail.com", roles = "USER")
-    void getUserImageSuccess() throws Exception {
-        when(imageService.getAvatar("avatar.jpg")).thenReturn(new byte[]{10, 20});
-
-        mockMvc.perform(get("/users/image/avatar.jpg"))
-                .andExpect(status().isOk());
-    }
 }

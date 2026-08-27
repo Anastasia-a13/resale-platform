@@ -27,7 +27,6 @@ import ru.skypro.homework.dto.ad.AdsDto;
 import ru.skypro.homework.dto.ad.CreateOrUpdateAdDto;
 import ru.skypro.homework.dto.ad.ExtendedAdDto;
 import ru.skypro.homework.service.AdService;
-import ru.skypro.homework.service.ImageService;
 
 /**
  * Контроллер для управления объявлениями.
@@ -40,7 +39,6 @@ import ru.skypro.homework.service.ImageService;
 public class AdController {
 
     private final AdService adService;
-    private final ImageService imageService;
 
     /**
      * Получает список объявлений.
@@ -141,43 +139,4 @@ public class AdController {
         return ResponseEntity.ok(adService.getUserAds(userDetails));
     }
 
-    /**
-     * Обновление картинки объявления.
-     * Возвращает байты изображения.
-     */
-    @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "Обновление картинки объявления")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Картинка успешно обновлена и возвращена"),
-            @ApiResponse(responseCode = "403", description = "Нет прав на изменение картинки"),
-            @ApiResponse(responseCode = "404", description = "Объявление не найдено"),
-            @ApiResponse(responseCode = "401", description = "Неавторизованный доступ")
-    })
-    public ResponseEntity<byte[]> updateImage(
-            @PathVariable Integer id,
-            @RequestPart("image") MultipartFile image,
-            @AuthenticationPrincipal UserDetails userDetails
-    ) {
-        byte[] imageBytes = adService.updateImage(userDetails, id, image);
-        MediaType mediaType = image.getContentType() != null
-                ? MediaType.parseMediaType(image.getContentType())
-                : MediaType.APPLICATION_OCTET_STREAM;
-        return ResponseEntity.ok()
-                .contentType(mediaType)
-                .body(imageBytes);
-    }
-
-    @GetMapping(value = "/image/{fileName}",
-            produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE})
-    @Operation(summary = "Получить картинку объявления")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Картинка успешно получена"),
-            @ApiResponse(responseCode = "404", description = "Картинка не найдена")
-    })
-    public ResponseEntity<byte[]> getImage(@PathVariable String fileName) {
-        byte[] image = imageService.getImage(fileName);
-        return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(image);
-    }
 }

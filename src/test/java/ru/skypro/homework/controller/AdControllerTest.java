@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -21,7 +20,6 @@ import ru.skypro.homework.exception.ForbiddenException;
 import ru.skypro.homework.exception.ResourceNotFoundException;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AdService;
-import ru.skypro.homework.service.ImageService;
 
 import java.util.List;
 
@@ -41,9 +39,6 @@ class AdControllerTest {
 
     @MockitoBean
     private AdService adService;
-
-    @MockitoBean
-    private ImageService imageService;
 
     @MockitoBean
     private UserDetailsServiceImpl userDetailsService;
@@ -188,23 +183,4 @@ class AdControllerTest {
                 .andExpect(jsonPath("$.count").value(1));
     }
 
-    @Test
-    @WithMockUser(username = "user@mail.com", roles = "USER")
-    void updateImageSuccess() throws Exception {
-        when(adService.updateImage(any(), anyInt(), any())).thenReturn(new byte[]{1, 2, 3});
-
-        MockMultipartFile image = new MockMultipartFile("image", "photo.jpg", MediaType.IMAGE_JPEG_VALUE, new byte[]{1, 2, 3});
-
-        mockMvc.perform(multipart(HttpMethod.PATCH, "/ads/1/image")
-                        .file(image))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void getImageSuccess() throws Exception {
-        when(imageService.getImage("test.jpg")).thenReturn(new byte[]{10, 20});
-
-        mockMvc.perform(get("/ads/image/test.jpg"))
-                .andExpect(status().isOk());
-    }
 }
