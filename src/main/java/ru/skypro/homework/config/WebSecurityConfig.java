@@ -44,7 +44,7 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorization -> authorization
                         .requestMatchers(AUTH_WHITELIST).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/ads/**", "/comments/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/ads/**", "/comments/**", "/users/image/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/users/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/ads/me").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/ads/**", "/ads/*/comments/**", "/users/**").hasAnyRole("USER", "ADMIN")

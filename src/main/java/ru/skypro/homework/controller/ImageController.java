@@ -21,6 +21,8 @@ import ru.skypro.homework.service.AdService;
 import ru.skypro.homework.service.ImageService;
 import ru.skypro.homework.service.UserService;
 
+import java.util.Locale;
+
 /**
  * Контроллер для работы с изображениями.
  * Реализует получение и обновление картинок объявлений и аватаров пользователей.
@@ -51,7 +53,7 @@ public class ImageController {
     public ResponseEntity<byte[]> getAdImage(@PathVariable String fileName) {
         byte[] image = imageService.getImage(fileName);
         return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG)
+                .contentType(resolveMediaType(fileName))
                 .body(image);
     }
 
@@ -102,7 +104,7 @@ public class ImageController {
     public ResponseEntity<byte[]> getUserImage(@PathVariable String fileName) {
         byte[] image = imageService.getAvatar(fileName);
         return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG)
+                .contentType(resolveMediaType(fileName))
                 .body(image);
     }
 
@@ -126,5 +128,15 @@ public class ImageController {
     ) {
         userService.uploadAvatar(userDetails, image);
         return ResponseEntity.ok().build();
+    }
+
+    private MediaType resolveMediaType(String fileName) {
+        String ext = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase(Locale.ROOT);
+        return switch (ext) {
+            case "png" -> MediaType.IMAGE_PNG;
+            case "gif" -> MediaType.IMAGE_GIF;
+            case "jpg", "jpeg" -> MediaType.IMAGE_JPEG;
+            default -> MediaType.APPLICATION_OCTET_STREAM;
+        };
     }
 }

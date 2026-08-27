@@ -19,6 +19,7 @@ public interface AdMapper {
      */
     @Mapping(source = "id", target = "pk")
     @Mapping(source = "author.id", target = "author")
+    @Mapping(target = "image", expression = "java(entity.getImage() == null ? null : \"/ads/image/\" + entity.getImage())")
     AdDto toDto(Ad entity);
 
     /**
@@ -44,6 +45,7 @@ public interface AdMapper {
     @Mapping(source = "author.lastName", target = "authorLastName")
     @Mapping(source = "author.email", target = "email")
     @Mapping(source = "author.phone", target = "phone")
+    @Mapping(target = "image", expression = "java(entity.getImage() == null ? null : \"/ads/image/\" + entity.getImage())")
     ExtendedAdDto toExtendedDto(Ad entity);
 
     /**
