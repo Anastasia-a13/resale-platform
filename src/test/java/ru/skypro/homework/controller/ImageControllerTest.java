@@ -56,7 +56,7 @@ class ImageControllerTest {
     @Test
     @WithMockUser(username = "user@mail.com", roles = "USER")
     void updateAdImageSuccess() throws Exception {
-        when(adService.updateImage(any(), anyInt(), any())).thenReturn(new byte[]{1, 2, 3});
+        when(adService.updateAdImage(any(), anyInt(), any())).thenReturn(new byte[]{1, 2, 3});
 
         MockMultipartFile image = new MockMultipartFile("image", "photo.jpg", MediaType.IMAGE_JPEG_VALUE, new byte[]{1, 2, 3});
 

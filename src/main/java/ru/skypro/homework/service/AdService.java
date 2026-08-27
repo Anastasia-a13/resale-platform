@@ -90,7 +90,7 @@ public class AdService {
     }
 
     @Transactional
-    public byte[] updateImage(UserDetails userDetails, Integer id, MultipartFile image) {
+    public byte[] updateAdImage(UserDetails userDetails, Integer id, MultipartFile image) {
         Ad ad = adRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ResourceNotFoundException.AD_NOT_FOUND));
         validator.checkAdOwnership(ad, userDetails);

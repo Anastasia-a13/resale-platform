@@ -34,17 +34,11 @@ public class ImageService {
             "image/jpeg", "image/png", "image/gif");
 
     public String saveImage(MultipartFile file) {
-        validateImage(file);
-        String fileName = generateFileName(file);
-        writeToFile(Path.of(imagesDir, fileName), file);
-        return fileName;
+        return saveFile(imagesDir, file);
     }
 
     public String saveAvatar(MultipartFile file) {
-        validateImage(file);
-        String fileName = generateFileName(file);
-        writeToFile(Path.of(avatarsDir, fileName), file);
-        return fileName;
+        return saveFile(avatarsDir, file);
     }
 
     public byte[] getImage(String fileName) {
@@ -58,17 +52,25 @@ public class ImageService {
     public record ImageResult(String fileName, byte[] bytes) {}
 
     public ImageResult updateImage(String oldFileName, MultipartFile file) {
-        deleteFile(imagesDir, oldFileName);
-        String fileName = generateFileName(file);
-        writeToFile(Path.of(imagesDir, fileName), file);
-        return new ImageResult(fileName, readFromDisk(imagesDir, fileName));
+        return updateFile(imagesDir, oldFileName, file);
     }
 
     public ImageResult updateAvatar(String oldFileName, MultipartFile file) {
-        deleteFile(avatarsDir, oldFileName);
+        return updateFile(avatarsDir, oldFileName, file);
+    }
+
+    private String saveFile(String dir, MultipartFile file) {
+        validateImage(file);
         String fileName = generateFileName(file);
-        writeToFile(Path.of(avatarsDir, fileName), file);
-        return new ImageResult(fileName, readFromDisk(avatarsDir, fileName));
+        writeToFile(Path.of(dir, fileName), file);
+        return fileName;
+    }
+
+    private ImageResult updateFile(String dir, String oldFileName, MultipartFile file) {
+        deleteFile(dir, oldFileName);
+        String fileName = generateFileName(file);
+        writeToFile(Path.of(dir, fileName), file);
+        return new ImageResult(fileName, readFromDisk(dir, fileName));
     }
 
     private void validateImage(MultipartFile file) {

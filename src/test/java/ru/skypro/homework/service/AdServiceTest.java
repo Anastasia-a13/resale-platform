@@ -206,7 +206,7 @@ class AdServiceTest {
     }
 
     @Test
-    void updateImageSuccess() {
+    void updateAdImageSuccess() {
         UserDetails owner = createUserDetails("owner@mail.com", "ROLE_USER");
         Ad ad = createAd(1, "owner@mail.com");
         MockMultipartFile image = new MockMultipartFile("image", "photo.jpg", "image/jpeg", new byte[]{1, 2, 3});
@@ -216,7 +216,7 @@ class AdServiceTest {
         when(imageService.updateImage("image.jpg", image)).thenReturn(imgResult);
         when(adRepository.save(any(Ad.class))).thenReturn(ad);
 
-        byte[] result = adService.updateImage(owner, 1, image);
+        byte[] result = adService.updateAdImage(owner, 1, image);
 
         assertEquals(3, result.length);
         assertEquals("new.jpg", ad.getImage());

@@ -77,7 +77,7 @@ public class ImageController {
             @RequestPart("image") MultipartFile image,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
-        byte[] imageBytes = adService.updateImage(userDetails, id, image);
+        byte[] imageBytes = adService.updateAdImage(userDetails, id, image);
         MediaType mediaType = image.getContentType() != null
                 ? MediaType.parseMediaType(image.getContentType())
                 : MediaType.APPLICATION_OCTET_STREAM;
